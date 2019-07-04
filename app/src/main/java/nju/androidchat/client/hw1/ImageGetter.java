@@ -48,10 +48,10 @@ public class ImageGetter implements Html.ImageGetter {
     }
 
     private void getNetworkImage(String url) {
+        StringBuilder builder = new StringBuilder(url);
         RequestQueue queue = Volley.newRequestQueue(context);
         ImageRequest request = new ImageRequest(url, response -> {
-            saveImage(getImageName(url), response);
-            System.out.println("Text View text is:" + textView.getText());
+            saveImage(getImageName(builder.toString()), response);
             textView.setText(Html.fromHtml(textView.getText().toString(), Html.FROM_HTML_MODE_LEGACY, this, null));
         }, 0, 0, ImageView.ScaleType.CENTER, Bitmap.Config.RGB_565, error -> Log.d(TAG, "onErrorResponse:" + error));
         queue.add(request);
