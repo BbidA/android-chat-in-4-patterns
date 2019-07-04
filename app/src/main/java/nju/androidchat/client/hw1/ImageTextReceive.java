@@ -26,14 +26,12 @@ public class ImageTextReceive extends LinearLayout {
     private Context context;
     private UUID messageId;
     private OnRecallMessageRequested onRecallMessageRequested;
-    private ImageGetter imageGetter;
 
     public ImageTextReceive(Context context, String text, UUID messageId) {
         super(context);
         this.context = context;
         inflate(context, R.layout.item_text_receive, this);
         this.textView = findViewById(R.id.chat_item_content_text);
-        imageGetter = new ImageGetter(textView, context);
         this.messageId = messageId;
         setText(text);
     }
@@ -51,7 +49,13 @@ public class ImageTextReceive extends LinearLayout {
     }
 
     private void renderImage(String text) {
+        text = Utils.convertToHtmlImageString(text);
         textView.setText(Html
-                .fromHtml(Utils.convertToHtmlImageString(text), Html.FROM_HTML_MODE_LEGACY, imageGetter, null));
+                .fromHtml(
+                        text,
+                        Html.FROM_HTML_MODE_LEGACY,
+                        new ImageGetter(textView, context, text),
+                        null
+                ));
     }
 }

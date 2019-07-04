@@ -27,7 +27,7 @@ public class Utils {
     Class<?> CHAT_ACTIVITY = Mvvm0TalkActivity.class;
 
     private Pattern imageStringPattern =
-            Pattern.compile("(!\\[.*])(\\(.*\\))");
+            Pattern.compile("(!\\[.*])(\\((.*)\\))");
 
     public void jumpTo(AppCompatActivity activity, Class<?> clazz) {
         Intent intent = new Intent(activity.getBaseContext(), clazz);
@@ -74,7 +74,7 @@ public class Utils {
 
     public String convertToHtmlImageString(String text) {
         Matcher matcher = imageStringMatcher(text);
-        return matcher.replaceAll("<img src=\'$2\'>");
+        return matcher.replaceAll("<img src=\'$3\'>");
     }
 
 }

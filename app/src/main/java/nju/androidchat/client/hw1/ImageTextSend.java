@@ -28,7 +28,6 @@ public class ImageTextSend extends LinearLayout implements View.OnLongClickListe
     private UUID messageId;
     @Setter
     private OnRecallMessageRequested onRecallMessageRequested;
-    private ImageGetter imageGetter;
 
     public ImageTextSend(
             Context context,
@@ -40,7 +39,6 @@ public class ImageTextSend extends LinearLayout implements View.OnLongClickListe
         this.context = context;
         inflate(context, R.layout.item_text_send, this);
         this.textView = findViewById(R.id.chat_item_content_text);
-        imageGetter = new ImageGetter(textView, context);
         this.messageId = messageId;
         this.onRecallMessageRequested = onRecallMessageRequested;
 
@@ -77,7 +75,12 @@ public class ImageTextSend extends LinearLayout implements View.OnLongClickListe
 
     private void renderImage(String text) {
         textView.setText(Html
-                .fromHtml(Utils.convertToHtmlImageString(text), Html.FROM_HTML_MODE_LEGACY, imageGetter, null));
+                .fromHtml(
+                        Utils.convertToHtmlImageString(text),
+                        Html.FROM_HTML_MODE_LEGACY,
+                        new ImageGetter(textView, context, text),
+                        null
+                ));
     }
 }
 

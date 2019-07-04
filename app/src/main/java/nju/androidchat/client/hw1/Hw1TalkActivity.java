@@ -56,7 +56,7 @@ public class Hw1TalkActivity extends AppCompatActivity
 
                     // 增加ItemText
                     for (ClientMessage message : messages) {
-                        String text = String.format("%s", message.getMessage());
+                        String text = message.getMessage();
                         // 如果是自己发的，增加ItemTextSend
                         if (message.getSenderUsername().equals(this.presenter.getUsername())) {
                             content.addView(new ImageTextSend(this, text, message.getMessageId(), this));

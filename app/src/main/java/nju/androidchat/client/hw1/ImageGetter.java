@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.Volley;
+import nju.androidchat.client.Utils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -26,11 +27,13 @@ public class ImageGetter implements Html.ImageGetter {
 
     private Context context;
     private TextView textView;
+    private String text;
 
-    ImageGetter(TextView textView, Context context) {
+    ImageGetter(TextView textView, Context context, String text) {
         super();
         this.textView = textView;
         this.context = context;
+        this.text = text;
     }
 
     @Override
@@ -50,9 +53,10 @@ public class ImageGetter implements Html.ImageGetter {
     private void getNetworkImage(String url) {
         StringBuilder builder = new StringBuilder(url);
         RequestQueue queue = Volley.newRequestQueue(context);
+        System.out.println(Utils.convertToHtmlImageString(text));
         ImageRequest request = new ImageRequest(url, response -> {
             saveImage(getImageName(builder.toString()), response);
-            textView.setText(Html.fromHtml(textView.getText().toString(), Html.FROM_HTML_MODE_LEGACY, this, null));
+            textView.setText(Html.fromHtml(Utils.convertToHtmlImageString(text), Html.FROM_HTML_MODE_LEGACY, this, null));
         }, 0, 0, ImageView.ScaleType.CENTER, Bitmap.Config.RGB_565, error -> Log.d(TAG, "onErrorResponse:" + error));
         queue.add(request);
     }
