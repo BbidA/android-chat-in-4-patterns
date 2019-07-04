@@ -1,7 +1,8 @@
-package nju.androidchat.client.mvp0;
+package nju.androidchat.client.hw1;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.style.ImageSpan;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -22,20 +23,20 @@ import java.util.List;
 import java.util.UUID;
 
 @Log
-public class Mvp0TalkActivity extends AppCompatActivity implements Mvp0Contract.View, TextView.OnEditorActionListener,
-        OnRecallMessageRequested {
-    private Mvp0Contract.Presenter presenter;
+public class Hw1TalkActivity extends AppCompatActivity
+        implements Hw1Contract.View, TextView.OnEditorActionListener, OnRecallMessageRequested {
+    private Hw1Contract.Presenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Mvp0TalkModel mvp0TalkModel = new Mvp0TalkModel();
+        Hw1TalkModel hw1TalkModel = new Hw1TalkModel();
 
         // Create the presenter
-        this.presenter = new Mvp0TalkPresenter(mvp0TalkModel, this, new ArrayList<>());
-        mvp0TalkModel.setIMvp0TalkPresenter(this.presenter);
+        this.presenter = new Hw1TalkPresenter(hw1TalkModel, this, new ArrayList<>());
+        hw1TalkModel.setIMvp0TalkPresenter(this.presenter);
     }
 
     @Override
@@ -44,6 +45,7 @@ public class Mvp0TalkActivity extends AppCompatActivity implements Mvp0Contract.
         presenter.start();
     }
 
+    @SuppressWarnings("Duplicates")
     @Override
     public void showMessageList(List<ClientMessage> messages) {
         runOnUiThread(() -> {
@@ -57,9 +59,9 @@ public class Mvp0TalkActivity extends AppCompatActivity implements Mvp0Contract.
                         String text = String.format("%s", message.getMessage());
                         // 如果是自己发的，增加ItemTextSend
                         if (message.getSenderUsername().equals(this.presenter.getUsername())) {
-                            content.addView(new ItemTextSend(this, text, message.getMessageId(), this));
+                            content.addView(new ImageTextSend(this, text, message.getMessageId(), this));
                         } else {
-                            content.addView(new ItemTextReceive(this, text, message.getMessageId()));
+                            content.addView(new ImageTextReceive(this, text, message.getMessageId()));
                         }
                     }
 
@@ -69,7 +71,7 @@ public class Mvp0TalkActivity extends AppCompatActivity implements Mvp0Contract.
     }
 
     @Override
-    public void setPresenter(Mvp0Contract.Presenter presenter) {
+    public void setPresenter(Hw1Contract.Presenter presenter) {
         this.presenter = presenter;
     }
 

@@ -1,19 +1,21 @@
 package nju.androidchat.client;
 
+import android.content.Context;
 import android.content.Intent;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ScrollView;
-
+import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
-
-import java.util.Objects;
-import java.util.Properties;
-
 import lombok.experimental.UtilityClass;
 import lombok.extern.java.Log;
 import nju.androidchat.client.mvvm0.Mvvm0TalkActivity;
+
+import java.util.Objects;
+import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
@@ -23,6 +25,9 @@ public class Utils {
     Properties props = new Properties();
     String CHAT_ACTIVITY_KEY = "chat_activity";
     Class<?> CHAT_ACTIVITY = Mvvm0TalkActivity.class;
+
+    private Pattern imageStringPattern =
+            Pattern.compile("(!\\[.*])(\\(.*\\))");
 
     public void jumpTo(AppCompatActivity activity, Class<?> clazz) {
         Intent intent = new Intent(activity.getBaseContext(), clazz);
@@ -40,13 +45,15 @@ public class Utils {
 
     public boolean hideKeyboard(AppCompatActivity activity) {
         InputMethodManager mInputMethodManager = (InputMethodManager) activity.getSystemService(INPUT_METHOD_SERVICE);
-        return mInputMethodManager.hideSoftInputFromWindow(Objects.requireNonNull(activity.getCurrentFocus()).getWindowToken(), 0);
+        return mInputMethodManager
+                .hideSoftInputFromWindow(Objects.requireNonNull(activity.getCurrentFocus()).getWindowToken(), 0);
     }
 
     public boolean send(int actionId, KeyEvent event) {
         return actionId == EditorInfo.IME_ACTION_SEND
                 || actionId == EditorInfo.IME_ACTION_DONE
-                || (event != null && KeyEvent.KEYCODE_ENTER == event.getKeyCode() && KeyEvent.ACTION_DOWN == event.getAction());
+                || (event != null && KeyEvent.KEYCODE_ENTER == event.getKeyCode() && KeyEvent.ACTION_DOWN == event
+                .getAction());
     }
 
     public void scrollListToBottom(AppCompatActivity activity) {
@@ -59,6 +66,15 @@ public class Utils {
     // 简单地判断一个内容里有没有脏话
     public boolean containsBadWords(String content) {
         return content.contains("fuck");
+    }
+
+    public Matcher imageStringMatcher(String text) {
+        return imageStringPattern.matcher(text);
+    }
+
+    public String convertToHtmlImageString(String text) {
+        Matcher matcher = imageStringMatcher(text);
+        return matcher.replaceAll("<img src=\'$2\'>");
     }
 
 }

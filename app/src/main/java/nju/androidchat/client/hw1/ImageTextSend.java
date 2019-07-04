@@ -1,13 +1,8 @@
-package nju.androidchat.client.component;
+package nju.androidchat.client.hw1;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.ImageSpan;
+import android.text.Html;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -15,16 +10,16 @@ import androidx.annotation.StyleableRes;
 import lombok.Setter;
 import nju.androidchat.client.R;
 import nju.androidchat.client.Utils;
+import nju.androidchat.client.component.OnRecallMessageRequested;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.UUID;
-import java.util.regex.Matcher;
 
-public class ItemTextSend extends LinearLayout implements View.OnLongClickListener {
+/**
+ * Author: J.D. Liao
+ * Date: 2019-07-04
+ * Description:
+ */
+public class ImageTextSend extends LinearLayout implements View.OnLongClickListener {
     @StyleableRes
     int index0 = 0;
 
@@ -33,8 +28,9 @@ public class ItemTextSend extends LinearLayout implements View.OnLongClickListen
     private UUID messageId;
     @Setter
     private OnRecallMessageRequested onRecallMessageRequested;
+    private ImageGetter imageGetter;
 
-    public ItemTextSend(
+    public ImageTextSend(
             Context context,
             String text,
             UUID messageId,
@@ -44,6 +40,7 @@ public class ItemTextSend extends LinearLayout implements View.OnLongClickListen
         this.context = context;
         inflate(context, R.layout.item_text_send, this);
         this.textView = findViewById(R.id.chat_item_content_text);
+        imageGetter = new ImageGetter(textView, context);
         this.messageId = messageId;
         this.onRecallMessageRequested = onRecallMessageRequested;
 
@@ -56,7 +53,7 @@ public class ItemTextSend extends LinearLayout implements View.OnLongClickListen
     }
 
     public void setText(String text) {
-        textView.setText(text);
+        renderImage(text);
     }
 
     @Override
@@ -78,10 +75,9 @@ public class ItemTextSend extends LinearLayout implements View.OnLongClickListen
 
     }
 
-    private Bitmap loadImageThroughHttp(String path) throws IOException {
-        return BitmapFactory.decodeStream((InputStream) new URL(path).getContent());
+    private void renderImage(String text) {
+        textView.setText(Html
+                .fromHtml(Utils.convertToHtmlImageString(text), Html.FROM_HTML_MODE_LEGACY, imageGetter, null));
     }
-
-
-
 }
+
